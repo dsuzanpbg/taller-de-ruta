@@ -1,0 +1,28 @@
+# Dependencias
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js
+.next/
+out/
+build/
+next-env.d.ts
+
+# Produccion
+.vercel
+*.tsbuildinfo
+
+# Entorno (NUNCA subir credenciales)
+.env
+.env.local
+.env*.local
+
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# Pedidos (contienen datos personales de clientes: NUNCA subir)
+data/
+store/data/

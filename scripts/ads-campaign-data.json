@@ -1,0 +1,757 @@
+{
+  "_documento": {
+    "titulo": "Estructura de campana Meta Ads - Taller de Ruta",
+    "fecha": "2026-11-09",
+    "graph_api_version": "v22.0",
+    "moneda_cuenta": "USD",
+    "nota": "Este archivo es un plano de despliegue, no un ejecutable. Los IDs (act_ID, pixel_id, page_id, instagram_actor_id) y los interest_id son placeholders que hay que resolver antes de llamar a la API. Ver _antes_de_desplegar.",
+    "objetivo_del_primer_test": "10 primeras ventas en 14 dias con 100 USD de presupuesto total.",
+    "reglas_que_no_se_pueden_romper": [
+      "Margen bruto minimo 55% ANTES de ads. El hero a costo total puesto en cliente de MXN 220 da 63.3% bruto. Si el costo real sube a MXN 270, el margen cae a 54.9% y NO hay pauta: solo organico y pre-venta.",
+      "CPA maximo aceptable MXN 250. Ver la cuenta completa en PLAN_LANZAMIENTO.md.",
+      "Plazo de entrega real: 7 a 15 dias habiles. Aparece en todos los anuncios.",
+      "Cero marcas de terceros. Audiencias, copy y creativos sin logos de motores, cascings ni cascos.",
+      "Cero promesas de seguridad garantizada. El candado se vende como postura disuasoria, nunca como garantia.",
+      "Ningun anuncio se activa hasta que haya Pixel de Meta instalado y verificado, porque sin eso el objetivo de conversiones no se puede optimizar."
+    ]
+  },
+
+  "_antes_de_desplegar": {
+    "bloqueadores_hard": [
+      {
+        "id": "MP-TOKEN",
+        "que": "MERCADOPAGO_ACCESS_TOKEN vacio en store/.env.local",
+        "impacto": "Sin token, /api/checkout responde 503 y el unico canal de compra es WhatsApp manual. Sin checkout no hay venta medible.",
+        "como_se_resuelve": "Pegar el token de produccion (APP_USR-) en store/.env.local y hacer una compra de prueba de MXN 1 antes de lanzar ads. El checkout ya esta implementado: src/app/api/checkout/route.ts."
+      },
+      {
+        "id": "PIXEL",
+        "que": "No hay Meta Pixel ni analytics instalado en el codigo",
+        "impacto": "Sin Pixel no hay evento Purchase, no hay ROAS, y el objetivo OUTCOME_SALES no se puede optimizar. Campaign de conversiones con pixel inexistente = gasto a ciegas.",
+        "como_se_resuelve": "Instalar el Pixel (base code) + evento Purchase disparado en la pagina de gracias /checkout/gracias. Alternativa sin codigo: usar el evento 'Purchase' via la API de Conversiones con el webhook de Mercado Pago. Mientras tanto, arrancar solo con la campana de trafico."
+      },
+      {
+        "id": "DOMINIO",
+        "que": "tallerdelruta.mx no resuelve (NXDOMAIN en DNS)",
+        "impacto": "Meta no verifica un dominio inexistente. Con el subdominio .vercel.app se puede anunciar, pero la URL de la landing no coincide con la del perfil de Facebook y eso baja la confianza y la entrega.",
+        "como_se_resuelve": "Comprar el dominio .mx (200 a 400 MXN/ano segun README) antes de crear las campanas, o aceptar el subdominio .vercel.app y priorizar la campana de trafico."
+      },
+      {
+        "id": "COSTO-PROVEEDOR",
+        "que": "Los costos de store/src/data/products.ts son estimaciones de investigacion, no confirmados",
+        "impacto": "Todo el CPA de este documento depende del costo real puesto en cliente del hero.",
+        "como_se_resuelve": "Abrir los 5 enlaces de VALIDACION_PROVEEDORES.md en AliExpress con direccion de Mexico, anotar producto + envio, y recalcular. Si el hero queda arriba de MXN 270, no hay pauta."
+      }
+    ],
+    "placeholders_a_resolver": {
+      "act_ID": "ID de la cuenta de anuncios. Formato: act_12345678901234. Se obtiene en business.facebook.com, en Configuracion de la cuenta.",
+      "pixel_id": "ID del Pixel de Meta. Se crea en Events Manager. Debe disparar ViewContent, AddToCart, InitiateCheckout y Purchase.",
+      "page_id": "ID de la pagina de Facebook de Taller de Ruta.",
+      "instagram_actor_id": "ID de la cuenta de Instagram de negocio asociada a la pagina.",
+      "interest_id": "Los IDs de intereses NO son inventables. Resolverlos con GET https://graph.facebook.com/v22.0/search?type=interest&q=motociclismo&access_token=... o con el buscador de Interests dentro de Ads Manager, que los devuelve con su ID. Los nombres en targeting.interests van con el name legible y el id real.",
+      "custom_audience_id": "ID de la audiencia personalizada. Se crea en Audiences > Crear audiencia > Sitio web. Se llena sola con el Pixel, no hace falta subir datos."
+    }
+  },
+
+  "_presupuesto_y_dinero": {
+    "presupuesto_total_usd": 100,
+    "tipo_de_cambio_usd_a_mxn": 18.61,
+    "nota_tipo_de_cambio": "Referencia al 9 de noviembre de 2026. El presupuesto se mueve el dia que se gasta, no el dia que se planeo.",
+    "reparto": {
+      "muestras_de_proveedor": { "usd": 18, "mxn": 335, "para_que": "2 muestras del hero (candidatos A y B de VALIDACION_PROVEEDORES.md) mas 1 de punos. Sirven para confirmar la calidad antes de gastar en ads y para tener fotos propias reales." },
+      "meta_ads": { "usd": 45, "mxn": 837, "para_que": "12 dias de pauta con presupuesto diario chico y dos campanas (conversiones + trafico). Es la partida mas grande porque es la unica que puede crear demanda desde cero." },
+      "google_ads": { "usd": 8, "mxn": 149, "para_que": "Fase 2, solo se activa si Meta ya compro al menos 1 venta. Search con palabras exactas de intencion alta + PMax con una sola linea de producto." },
+      "dominio_mx_1_ano": { "usd": 12, "mxn": 223, "para_que": "Dominio .mx propio. Sin esto la landing se anuncia con URL de Vercel y se pierde confianza. Es gasto de un ano, no recurrente." },
+      "reserva": { "usd": 17, "mxn": 316, "para_que": "Reposicion de stock si falla un pedido, envio urgente de una muestra, o un segundo intento de pauta con el creativo ganador. No se toca sin una razon escrita." }
+    },
+    "suposiciones_que_ya_caben_en_presupuesto": [
+      "Las fotos de producto son placeholders (store/IMAGENES.md). Conseguir fotos reales depende de las muestras, por eso van en el presupuesto. Con fotos reales el CTR sube; sin ellas, el anuncio arranca con desventaja.",
+      "La tienda corre en Vercel Hobby: MXN 0 de hosting. No hay partida de infraestructura mensual que medir.",
+      "No hay partida de software: todos los Downsstream del flujo (CapCut, Canva, Metricool, Google Trends, Pixel Helper, Mailchimp free) tienen plan gratuito y no se paga nada."
+    ]
+  },
+
+  "_economia_del_hero_y_cpa": {
+    "producto": "kit-soporte-celular-moto-antivibracion-360",
+    "precio_mxn": 599,
+    "costo_total_puesto_en_cliente_mxn": 220,
+    "nota_costo": "Costo confirmado con direccion de Mexico, producto + envio hasta el cliente. Es el maximo aceptable que da margen sano (VALIDACION_PROVEEDORES.md lo fija en 220; 270 es el limite duro).",
+    "calculo": {
+      "precio": 599,
+      "menos_costo_puesto_en_cliente": 220,
+      "margen_bruto": 379,
+      "margen_bruto_pct": 63.3,
+      "menos_comision_pasarela_3_5_pct": 20.97,
+      "menos_iva_sobre_comision_16_pct": 3.35,
+      "menos_reserva_devoluciones_2_pct": 11.98,
+      "margen_de_contribucion_antes_de_ads": 342.7,
+      "margen_de_contribucion_pct": 57.2,
+      "cpa_de_equilibrio": 342.7,
+      "nota_equilibrio": "A CPA 342.70 el pedido entra en cero. Es el piso teorico, no el objetivo.",
+      "cpa_maximo_aceptable": 250,
+      "utilidad_por_pedido_a_cpa_250": 92.7,
+      "utilidad_pct_a_cpa_250": 15.5,
+      "cpa_objetivo": 200,
+      "utilidad_por_pedido_a_cpa_200": 142.7,
+      "utilidad_pct_a_cpa_200": 23.8,
+      "roas_a_cpa_250": 2.4,
+      "roas_a_cpa_200": 3.0
+    },
+    "formula_cpa": "CPA_max = (Precio - Costo_puesto_en_cliente) - (comision + IVA + reserva) - utilidad_minima_deseada. Con utilidad minima de MXN 100 por pedido: CPA_max = 379 - 36.30 - 100 = 242.70. Se redondea a MXN 250 como techo de operacion para dejar margen de maniobra y a MXN 200 como objetivo de campana.",
+    "sensibilidad_al_costo": [
+      { "costo_puesto_en_cliente": 200, "margen_bruto_pct": 66.6, "cpa_equilibrio": 362.7, "cpa_max": 266.9, "veredicto": "Margen sano. Pauta con confianza." },
+      { "costo_puesto_en_cliente": 220, "margen_bruto_pct": 63.3, "cpa_equilibrio": 342.7, "cpa_max": 246.9, "veredicto": "Escenario base de este plan." },
+      { "costo_puesto_en_cliente": 245, "margen_bruto_pct": 59.1, "cpa_equilibrio": 317.7, "cpa_max": 221.9, "veredicto": "Aceptable, pero el CPA max baja a 220. Bajar presupuesto de campana." },
+      { "costo_puesto_en_cliente": 270, "margen_bruto_pct": 54.9, "cpa_equilibrio": 292.7, "cpa_max": 196.9, "veredicto": "ROJO. Margen bajo el piso de 55%. NO hay pauta. Solo organico, WhatsApp y venta directa. Si el costo sube mas, revisar precio o cambiar de proveedor." }
+    ],
+    "matematicas_de_la_meta": "Con USD 45 de pauta y CPA de MXN 250, salen 45 x 18.61 / 250 = 3.3 ventas atribuidas. Con CPA de MXN 200, salen 4.2. Las otras 6-7 ventas del objetivo tienen que salir de los canales organicos (LEADS-ORGANICOS.md) y de la venta directa por WhatsApp. La pauta no compra 10 ventas sola con este presupuesto; por eso el objetivo mixto esta escrito asi y no como '10 ventas de ads'.",
+    "umbral_de_ro_as_para_escalar": "ROAS >= 2.4 (CPA <= 250) en los ultimos 3 dias. Si el ROAS cae por debajo de 1.75 (CPA > 343) el pedido entra en perdida y se apaga la campana de inmediato."
+  },
+
+  "_métricas_objetivo": {
+    "ctr_link": { "objetivo": ">= 1.5%", "alerta": "1.0% a 1.5%", "muerte": "< 1.0% con 3000+ impresiones", "nota": "El criterio de exito historico del proyecto ya usa CTR > 1.5% + add to cart > 3%." },
+    "cpc_max_tolerable_mxn": { "objetivo": 6.0, "alerta": "6.0 a 9.0", "muerte": "> 9.0 sostenido 2 dias", "nota": "A CPC 6 con 2.5% de conversion, CPA = 240. Es el numero que sale de la misma cuenta que el CPA." },
+    "tasa_add_to_cart": { "objetivo": ">= 4%", "alerta": "2% a 4%", "muerte": "< 2% con 500+ visitas", "nota": "Sin add to cart hay un problema de oferta o de pagina, no de anuncio. Cambiar el copy no arregla eso." },
+    "conversion_visitante_a_compra": { "objetivo": ">= 2.5%", "alerta": "1.2% a 2.5%", "muerte": "< 1.2% con 800+ visitas" },
+    "cpa_objetivo_mxn": 200,
+    "cpa_maximo_mxn": 250,
+    "roas_minimo_para_escalar": 2.4,
+    "cpm_de_referencia_mxn": { "rango_esperado": "55 a 95", "nota": "No es un dato de mercado: es el rango de referencia con el que se calcula el CPC esperado. Si el CPM real sale de aqui, revisar la audiencia antes que el copy." },
+    "frecuencia": { "objetivo": "< 2.5 en 7 dias", "alerta": "2.5 a 4", "muerte": "> 4", "nota": "Frecuencia alta con CTR bajo = audiencia saturada o Creativewear. Rotar." },
+    "tiempo_hasta_primera_venta_meta": { "objetivo": "dia 3 o 4 desde el lanzamiento", "alerta": "dia 5 a 7", "muerte": "sin venta al dia 7", "nota": "Si no hay venta ni add to cart al dia 7, el problema no es la campana: es la oferta o la ficha de producto." }
+  },
+
+  "campaigns": [
+    {
+      "nombre": "TDR | Conversion | Hero antivibracion | Ventas",
+      "nota_de_estrategia": "Es la campana que produce las ventas. Solo se activa cuando el Pixel este instalado y haya al menos 1 conversion registrada (o al menos 100 AddToCart para que el pixel tenga señal). Si el Pixel no esta, esta campana se queda en PAUSED y se usa solo la de trafico.",
+      "campaign": {
+        "name": "TDR | Conversion | Hero antivibracion | Ventas",
+        "objective": "OUTCOME_SALES",
+        "special_ad_categories": [],
+        "buying_type": "AUCTION",
+        "daily_budget": 1200,
+        "budget_comment": "1200 centavos = USD 12.00 diarios. Moneda de cuenta USD, el presupuesto se expresa en centavos de la moneda de la cuenta.",
+        "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+        "status": "PAUSED",
+        "status_comment": "Se activa a mano despues de verificar Pixel y checkout. Nunca dejar una campana en ACTIVE sin revisar el gasto del dia anterior.",
+        "start_time": 1794290400,
+        "end_time": 1795500000,
+        "time_comment": "2026-11-10 00:00 America/Mexico_City a 2026-11-24 00:00 America/Mexico_City (epoch UTC).",
+        "advantage_plus_budget": {
+          "enable": false,
+          "nota": "Con este presupuesto se controla mejor desde una sola campana. Advantage+ se deja para cuando el presupuesto pase de USD 25 diarios."
+        }
+      },
+      "ad_sets": [
+        {
+          "nombre": "AS1 | Repartidor y riders MX 22-45 | Intereses moto + delivery",
+          "ad_set": {
+            "name": "AS1 | Repartidor y riders MX 22-45 | Intereses moto + delivery",
+            "campaign_id": "REEMPLAZAR_con_el_ID_de_la_campana_Conversion",
+            "daily_budget": 500,
+            "budget_comment": "USD 5.00 diarios de los USD 12.00 de la campana (2 conjuntos = USD 10, se reservan USD 2 para subir el conjunto ganador o para AS3 si rinde mejor).",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "OFFSITE_CONVERSIONS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "target_bid": null,
+            "target_bid_comment": "Null porque todavia no hay historial de conversiones. Poner un tope de puja aqui con cero datos hace que la campana no aprenda. Cuando haya 50+ conversiones, evaluar COST_CAP o un tope en el nivel de campana.",
+            "promoted_object": {
+              "pixel_id": "REEMPLAZAR_con_el_ID_del_Pixel",
+              "custom_event_type": "PURCHASE"
+            },
+            "attribution_spec": [
+              { "event_type": "CLICK_THROUGH", "window_days": 7 },
+              { "event_type": "VIEW_THROUGH", "window_days": 1 }
+            ],
+            "targeting": {
+              "geo_locations": {
+                "countries": ["MX"],
+                "regions": [
+                  { "key": "REEMPLAZAR_ID_region_CDMX" },
+                  { "key": "REEMPLAZAR_ID_region_Jalisco" },
+                  { "key": "REEMPLAZAR_ID_region_Estado_de_Mexico" },
+                  { "key": "REEMPLAZAR_ID_region_Puebla" },
+                  { "key": "REEMPLAZAR_ID_region_Veracruz" },
+                  { "key": "REEMPLAZAR_ID_region_Yucatan" }
+                ],
+                "regions_comment": "Zonas con mayor uso de moto: capital yurbs.high. Los IDs de region se sacan de Ads Manager > Ubicaciones, no son inventables."
+              },
+              "age_min": 22,
+              "age_max": 45,
+              "genders": [1, 2],
+              "locales": ["es-MX"],
+              "publisher_platforms": ["facebook", "instagram"],
+              "facebook_positions": ["feed", "reels", "stories"],
+              "instagram_positions": ["feed", "reels", "stories", "explore"],
+              "device_platforms": ["mobile"],
+              "flexible_spec": [
+                {
+                  "interests": [
+                    { "id": "REEMPLAZAR_ID_interes_Motociclismo", "name": "Motociclismo" },
+                    { "id": "REEMPLAZAR_ID_interes_Moto", "name": "Moto" },
+                    { "id": "REEMPLAZAR_ID_interes_Delivery_reparto_comida", "name": "Delivery y reparto de comida" },
+                    { "id": "REEMPLAZAR_ID_interes_Repartidor", "name": "Repartidor" }
+                  ]
+                }
+              ],
+              "flexible_spec_comment": "flexible_spec es un arreglo de arreglos: cada arreglo interno es un grupo AND. Este grupo junta los 4 intereses en OR. Para exigir 'motociclismo Y delivery' se pondrian dos grupos internos separados.",
+              "custom_audiences": [],
+              "excluded_custom_audiences": [
+                { "id": "REEMPLAZAR_ID_audiencia_compradores", "name": "Compradores 180 dias" }
+              ],
+              "excluded_custom_audiences_comment": "Quitar a quien ya compro. Es la audience mas pequena y la mas rentable, pero solo tiene sentido si ya hubo ventas. Si no hay buyer data todavia, dejar el arreglo vacio."
+            },
+            "status": "PAUSED",
+            "start_time": 1794290400,
+            "end_time": 1795500000
+          },
+          "ads": [
+            {
+              "nombre": "AD1 | Kit antivibracion | Repartidor | C02",
+              "ad": {
+                "name": "AD1 | Kit antivibracion | Repartidor | C02",
+                "adset_id": "REEMPLAZAR_con_el_ID_del_AS1",
+                "creative": {
+                  "title": "Repartidor: el mapa no se te va",
+                  "body": "El mapa se te borra porque vibra el motor, no porque tu app esté mal. Este soporte tiene amortiguación en la unión y aprieta por las cuatro esquinas, así que el teléfono deja de girarse solo. Trae el sujetador de cable para que el cargador no se suelte en cada tope. Mándanos WhatsApp con el modelo de tu moto y te decimos si le queda. Envío a todo México, 7 a 15 días hábiles.",
+                  "name": "AD1 | Kit antivibracion | Repartidor | C02",
+                  "image_url": "https://tallerdelruta.mx/creativos/c02-kit-antivibracion-gancho-repartidor-1080x1920.png",
+                  "image_url_comment": "El creativo vive en store/public/creativos/. Meta descarga la imagen desde la URL publica, por eso tiene que estar en el dominio propio y no en localhost. Probar la URL antes de crear el anuncio.",
+                  "link_url": "https://tallerdelruta.mx/producto/kit-soporte-celular-moto-antivibracion-360",
+                  "call_to_action": { "type": "LEARN_MORE", "value": { "link_title": "Kit antivibracion 360" } },
+                  "page_id": "REEMPLAZAR_con_el_ID_de_la_pagina",
+                  "instagram_actor_id": "REEMPLAZAR_con_el_ID_de_la_cuenta_IG"
+                },
+                "status": "PAUSED"
+              },
+              "creative_asset": "c02-kit-antivibracion-gancho-repartidor-1080x1920.png",
+              "variante": {
+                "copy_variant": "A",
+                "angulo": "repartidor",
+                "nota": "A/B contra AD2 (mismo ad set, misma imagen, copy distinto). Cambia UNA sola variable: si cambian imagen y copy a la vez no se puede atribuir nada."
+              }
+            },
+            {
+              "nombre": "AD2 | Kit antivibracion | Ruta | C01",
+              "ad": {
+                "name": "AD2 | Kit antivibracion | Ruta | C01",
+                "adset_id": "REEMPLAZAR_con_el_ID_del_AS1",
+                "creative": {
+                  "title": "200 km y el celular donde lo dejaste",
+                  "body": "Doscientos kilómetros de carretera y el soporte aguanta: amortigua la vibración, gira 360° con traba para ver el mapa en vertical o acostado, y se monta en manubrio de 22 a 32 mm o en la base del espejo. Es de los que se quedan puestos, no de los que se caen a los 20 minutos. Envío a todo México, 7 a 15 días hábiles.",
+                  "name": "AD2 | Kit antivibracion | Ruta | C01",
+                  "image_url": "https://tallerdelruta.mx/creativos/c01-kit-antivibracion-gancho-vibracion-1080x1920.png",
+                  "link_url": "https://tallerdelruta.mx/producto/kit-soporte-celular-moto-antivibracion-360",
+                  "call_to_action": { "type": "LEARN_MORE", "value": { "link_title": "Kit antivibracion 360" } },
+                  "page_id": "REEMPLAZAR_con_el_ID_de_la_pagina",
+                  "instagram_actor_id": "REEMPLAZAR_con_el_ID_de_la_cuenta_IG"
+                },
+                "status": "PAUSED"
+              },
+              "creative_asset": "c01-kit-antivibracion-gancho-vibracion-1080x1920.png",
+              "variante": {
+                "copy_variant": "B",
+                "angulo": "ruta",
+                "nota": "Compara contra AD1: mismo conjunto, mismaAudience, copy y creativo distintos. Si AD2 gana en CTR, el problema era el angulo, no la oferta."
+              }
+            },
+            {
+              "nombre": "AD3 | Kit antivibracion | Instalacion | C03",
+              "ad": {
+                "name": "AD3 | Kit antivibracion | Instalacion | C03",
+                "adset_id": "REEMPLAZAR_con_el_ID_del_AS1",
+                "creative": {
+                  "title": "Se instala en 5 minutos, sin taladrar",
+                  "body": "Aprieta la abrazadera en el manubrio, mete el brazo, ajusta el ángulo y ya. Sirve en manubrios de 22 a 32 mm o en la base del espejo, que viene incluida. Viene con herramienta, así que no necesitas comprar nada extra. ¿No sabes si le queda a tu moto? Escríbenos por WhatsApp y te mandamos la guía de medidas. Envío a todo México, 7 a 15 días hábiles.",
+                  "name": "AD3 | Kit antivibracion | Instalacion | C03",
+                  "image_url": "https://tallerdelruta.mx/creativos/c03-kit-antivibracion-gancho-instalacion-1080x1920.png",
+                  "link_url": "https://tallerdelruta.mx/producto/kit-soporte-celular-moto-antivibracion-360",
+                  "call_to_action": { "type": "CONTACT_US", "value": { "link_title": "Escribinos" } },
+                  "page_id": "REEMPLAZAR_con_el_ID_de_la_pagina",
+                  "instagram_actor_id": "REEMPLAZAR_con_el_ID_de_la_cuenta_IG"
+                },
+                "status": "PAUSED"
+              },
+              "creative_asset": "c03-kit-antivibracion-gancho-instalacion-1080x1920.png",
+              "variante": {
+                "copy_variant": "C",
+                "angulo": "instalacion",
+                "nota": "Variante de CTA a WhatsApp. Sirve para medir si el traffic de Meta responde mejor al contacto directo que a la ficha de producto, sobre todo en el angulo de repartidor."
+              }
+            }
+          ]
+        },
+        {
+          "nombre": "AS2 | Motociclistas y rutas | Intereses mas amplios y edad ampliada",
+          "ad_set": {
+            "name": "AS2 | Motociclistas y rutas | 25-54",
+            "campaign_id": "REEMPLAZAR_con_el_ID_de_la_campana_Conversion",
+            "daily_budget": 500,
+            "budget_comment": "USD 5.00 diarios. Los 2 USD que sobran de los USD 12 de campana se reservan para subir este conjunto si el CPA sale mejor que en AS1.",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "OFFSITE_CONVERSIONS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "target_bid": null,
+            "promoted_object": {
+              "pixel_id": "REEMPLAZAR_con_el_ID_del_Pixel",
+              "custom_event_type": "PURCHASE"
+            },
+            "attribution_spec": [
+              { "event_type": "CLICK_THROUGH", "window_days": 7 },
+              { "event_type": "VIEW_THROUGH", "window_days": 1 }
+            ],
+            "targeting": {
+              "geo_locations": {
+                "countries": ["MX"],
+                "regions": [
+                  { "key": "REEMPLAZAR_ID_region_CDMX" },
+                  { "key": "REEMPLAZAR_ID_region_Jalisco" },
+                  { "key": "REEMPLAZAR_ID_region_Estado_de_Mexico" },
+                  { "key": "REEMPLAZAR_ID_region_Puebla" },
+                  { "key": "REEMPLAZAR_ID_region_Veracruz" },
+                  { "key": "REEMPLAZAR_ID_region_Yucatan" },
+                  { "key": "REEMPLAZAR_ID_region_Nuevo_Leon" },
+                  { "key": "REEMPLAZAR_ID_region_Queretaro" },
+                  { "key": "REEMPLAZAR_ID_region_Chihuahua" },
+                  { "key": "REEMPLAZAR_ID_region_Sonora" }
+                ]
+              },
+              "age_min": 25,
+              "age_max": 54,
+              "genders": [1, 2],
+              "locales": ["es-MX"],
+              "publisher_platforms": ["facebook", "instagram"],
+              "facebook_positions": ["feed", "reels", "stories"],
+              "instagram_positions": ["feed", "reels", "stories", "explore"],
+              "device_platforms": ["mobile"],
+              "flexible_spec": [
+                {
+                  "interests": [
+                    { "id": "REEMPLAZAR_ID_interes_Motociclismo", "name": "Motociclismo" },
+                    { "id": "REEMPLAZAR_ID_interes_Viajes", "name": "Viajes" },
+                    { "id": "REEMPLAZAR_ID_interes_Camping", "name": "Camping y actividades al aire libre" },
+                    { "id": "REEMPLAZAR_ID_interes_Automotriz", "name": "Automotriz" }
+                  ]
+                }
+              ],
+              "custom_audiences": [],
+              "excluded_custom_audiences": []
+            },
+            "status": "PAUSED",
+            "start_time": 1794290400,
+            "end_time": 1795500000
+          },
+          "ads": [
+            {
+              "nombre": "AD4 | Pun | Ruta | C01",
+              "ad": {
+                "name": "AD4 | Pun | Ruta | C01",
+                "adset_id": "REEMPLAZAR_con_el_ID_del_AS2",
+                "creative": {
+                  "title": "200 km y el celular donde lo dejaste",
+                  "body": "Doscientos kilómetros de carretera y el soporte aguanta: amortigua la vibración, gira 360° con traba para ver el mapa en vertical o acostado, y se monta en manubrio de 22 a 32 mm o en la base del espejo. Es de los que se quedan puestos, no de los que se caen a los 20 minutos. Envío a todo México, 7 a 15 días hábiles.",
+                  "name": "AD4 | Pun | Ruta | C01",
+                  "image_url": "https://tallerdelruta.mx/creativos/c01-kit-antivibracion-gancho-vibracion-1080x1920.png",
+                  "link_url": "https://tallerdelruta.mx/producto/kit-soporte-celular-moto-antivibracion-360",
+                  "call_to_action": { "type": "LEARN_MORE", "value": { "link_title": "Kit antivibracion 360" } },
+                  "page_id": "REEMPLAZAR_con_el_ID_de_la_pagina",
+                  "instagram_actor_id": "REEMPLAZAR_con_el_ID_de_la_cuenta_IG"
+                },
+                "status": "PAUSED"
+              },
+              "creative_asset": "c01-kit-antivibracion-gancho-vibracion-1080x1920.png",
+              "variante": {
+                "copy_variant": "A",
+                "angulo": "ruta",
+                "nota": "El mismo copy de AD2 pero en una audiencia mas ancha y con intereses de ruta. Si el CPA es mejor aqui que en AS1, el problema de AS1 era que el interes estaba demasiado acotado, no el copy."
+              }
+            },
+            {
+              "nombre": "AD5 | Pun | Regalo | C01",
+              "ad": {
+                "name": "AD5 | Pun | Regalo | C01",
+                "adset_id": "REEMPLAZAR_con_el_ID_del_AS2",
+                "creative": {
+                  "title": "El regalo que el motociclista sí usa",
+                  "body": "Si vas a regalar algo a alguien que vive sobre la moto, un soporte bonito no sirve de nada. Este trae lo que hace falta: base de manubrio, base de espejo, sujetador de cable y herramienta, todo en la caja. Se instala en diez minutos sin taladrar. Envío gratis a todo México, 7 a 15 días hábiles.",
+                  "name": "AD5 | Pun | Regalo | C01",
+                  "image_url": "https://tallerdelruta.mx/creativos/c01-kit-antivibracion-gancho-vibracion-1080x1920.png",
+                  "link_url": "https://tallerdelruta.mx/producto/kit-soporte-celular-moto-antivibracion-360",
+                  "call_to_action": { "type": "LEARN_MORE", "value": { "link_title": "Kit antivibracion 360" } },
+                  "page_id": "REEMPLAZAR_con_el_ID_de_la_pagina",
+                  "instagram_actor_id": "REEMPLAZAR_con_el_ID_de_la_cuenta_IG"
+                },
+                "status": "PAUSED"
+              },
+              "creative_asset": "c01-kit-antivibracion-gancho-vibracion-1080x1920.png",
+              "variante": {
+                "copy_variant": "B",
+                "angulo": "regalo",
+                "nota": "Mismo conjunto y misma imagen, copy de regalo. El angulo regalo suele comprar menos volumen pero con menos friccion, util para levantar el ROAS cuando la campana de reparto se estanca."
+              }
+            }
+          ]
+        },
+        {
+          "nombre": "AS3 | Amplio 18-55 MX | Advantage sin intereses",
+          "ad_set": {
+            "name": "AS3 | Amplio 18-55 MX | Advantage sin intereses",
+            "campaign_id": "REEMPLAZAR_con_el_ID_de_la_campana_Conversion",
+            "daily_budget": 200,
+            "budget_comment": "USD 2.00 diarios. Es la prueba controlada: si un conjunto amplio bate a los de intereses, la segmentacion estaba apretando de mas.",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "OFFSITE_CONVERSIONS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "target_bid": null,
+            "promoted_object": {
+              "pixel_id": "REEMPLAZAR_con_el_ID_del_Pixel",
+              "custom_event_type": "PURCHASE"
+            },
+            "attribution_spec": [
+              { "event_type": "CLICK_THROUGH", "window_days": 7 },
+              { "event_type": "VIEW_THROUGH", "window_days": 1 }
+            ],
+            "targeting": {
+              "geo_locations": { "countries": ["MX"] },
+              "age_min": 18,
+              "age_max": 55,
+              "genders": [1, 2],
+              "locales": ["es-MX"],
+              "publisher_platforms": ["facebook", "instagram"],
+              "facebook_positions": ["feed", "reels", "stories"],
+              "instagram_positions": ["feed", "reels", "stories", "explore"],
+              "device_platforms": ["mobile"],
+              "flexible_spec": [],
+              "flexible_spec_comment": "Vacio a proposito: este es el conjunto de control, sin intereses. Si un conjunto amplio bate a los segmentados, la segmentacion estaba apretando de mas. Con el Pixel instalado, Meta usa este conjunto para encontrar compradores fuera de las intereses.",
+              "custom_audiences": [],
+              "excluded_custom_audiences": []
+            },
+            "status": "PAUSED",
+            "start_time": 1794290400,
+            "end_time": 1795500000
+          },
+          "ads": [
+            {
+              "nombre": "AD6 | Hero | Precio | C01",
+              "ad": {
+                "name": "AD6 | Hero | Precio | C01",
+                "adset_id": "REEMPLAZAR_con_el_ID_del_AS3",
+                "creative": {
+                  "title": "De 749 a 599, y con envío gratis",
+                  "body": "Bajamos de 749 a 599 pesos y no quitamos nada: sigue incluyendo amortiguación, rotación 360 con traba, sujeción por cuatro esquinas, base de espejo y sujetador de cable. Es el kit completo, no la mitad. Envío gratis a todo México, 7 a 15 días hábiles.",
+                  "name": "AD6 | Hero | Precio | C01",
+                  "image_url": "https://tallerdelruta.mx/creativos/c01-kit-antivibracion-gancho-vibracion-1080x1920.png",
+                  "link_url": "https://tallerdelruta.mx/producto/kit-soporte-celular-moto-antivibracion-360",
+                  "call_to_action": { "type": "SHOP_NOW", "value": { "link_title": "Comprar ahora" } },
+                  "page_id": "REEMPLAZAR_con_el_ID_de_la_pagina",
+                  "instagram_actor_id": "REEMPLAZAR_con_el_ID_de_la_cuenta_IG"
+                },
+                "status": "PAUSED"
+              },
+              "creative_asset": "c01-kit-antivibracion-gancho-vibracion-1080x1920.png",
+              "variante": {
+                "copy_variant": "A",
+                "angulo": "precio",
+                "nota": "Empuje directo a la compra. En audiencia amplia y con el angulo de precio, este es el que mas se acerca al CPA objetivo si el producto convence en la ficha."
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "nombre": "TDR | Traffic | Intereses amplios | Alimentar pixel y remarketing",
+      "nota_de_estrategia": "Esta campana no busca venta directa: busca clics baratos, eventos de Pixel y una audiencia de retargeting con volumen. Es la que se activa primero si el Pixel todavia no tiene conversiones. Es tambien la que produce el contenido que despues se gasta en la campana de conversiones.",
+      "campaign": {
+        "name": "TDR | Traffic | Intereses amplios | Alimentar pixel y remarketing",
+        "objective": "OUTCOME_TRAFFIC",
+        "special_ad_categories": [],
+        "buying_type": "AUCTION",
+        "daily_budget": 800,
+        "budget_comment": "800 centavos = USD 8.00 diarios. Corre 5 dias paraMXN 40 diarios de pauta total (12 de conversiones + 8 de trafico) = 40 USD. Con 7 dias se pasa de 70 USD solo en Meta.",
+        "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+        "status": "PAUSED",
+        "start_time": 1794463200,
+        "end_time": 1795068000,
+        "time_comment": "2026-11-12 00:00 a 2026-11-19 00:00 America/Mexico_City. Empieza despues de la Conversion para que el Pixel ya tenga landings vistas. Si el Pixel no esta instalado, esta campana se adelanta al dia 1.",
+        "advantage_plus_budget": { "enable": false }
+      },
+      "ad_sets": [
+        {
+          "nombre": "TS1 | Motociclistas MX | Advantage audience broad",
+          "ad_set": {
+            "name": "TS1 | Motociclistas MX | Advantage audience broad",
+            "campaign_id": "REEMPLAZAR_con_el_ID_de_la_campana_Traffic",
+            "daily_budget": 400,
+            "budget_comment": "USD 4.00 diarios.",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "LINK_CLICKS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "target_bid": null,
+            "promoted_object": {
+              "pixel_id": "REEMPLAZAR_con_el_ID_del_Pixel"
+            },
+            "attribution_spec": [
+              { "event_type": "CLICK_THROUGH", "window_days": 7 },
+              { "event_type": "VIEW_THROUGH", "window_days": 1 }
+            ],
+            "targeting": {
+              "geo_locations": {
+                "countries": ["MX"],
+                "regions": [
+                  { "key": "REEMPLAZAR_ID_region_CDMX" },
+                  { "key": "REEMPLAZAR_ID_region_Jalisco" },
+                  { "key": "REEMPLAZAR_ID_region_Estado_de_Mexico" },
+                  { "key": "REEMPLAZAR_ID_region_Puebla" },
+                  { "key": "REEMPLAZAR_ID_region_Veracruz" }
+                ]
+              },
+              "age_min": 18,
+              "age_max": 45,
+              "genders": [1, 2],
+              "locales": ["es-MX"],
+              "publisher_platforms": ["facebook", "instagram"],
+              "facebook_positions": ["feed", "reels", "stories"],
+              "instagram_positions": ["feed", "reels", "stories", "explore"],
+              "device_platforms": ["mobile"],
+              "flexible_spec": [
+                {
+                  "interests": [
+                    { "id": "REEMPLAZAR_ID_interes_Motociclismo", "name": "Motociclismo" },
+                    { "id": "REEMPLAZAR_ID_interes_Moto", "name": "Moto" },
+                    { "id": "REEMPLAZAR_ID_interes_Casco_de_moto", "name": "Cascos de moto" }
+                  ]
+                }
+              ],
+              "custom_audiences": [],
+              "excluded_custom_audiences": []
+            },
+            "status": "PAUSED",
+            "start_time": 1794463200,
+            "end_time": 1795068000
+          },
+          "ads": [
+            {
+              "nombre": "TAD1 | Hero | Repartidor | C02",
+              "ad": {
+                "name": "TAD1 | Hero | Repartidor | C02",
+                "adset_id": "REEMPLAZAR_con_el_ID_del_TS1",
+                "creative": {
+                  "title": "Repartidor: el mapa no se te va",
+                  "body": "El mapa se te borra porque vibra el motor, no porque tu app esté mal. Este soporte tiene amortiguación en la unión y aprieta por las cuatro esquinas, así que el teléfono deja de girarse solo. Trae el sujetador de cable para que el cargador no se suelte en cada tope. Mándanos WhatsApp con el modelo de tu moto y te decimos si le queda. Envío a todo México, 7 a 15 días hábiles.",
+                  "name": "TAD1 | Hero | Repartidor | C02",
+                  "image_url": "https://tallerdelruta.mx/creativos/c02-kit-antivibracion-gancho-repartidor-1080x1920.png",
+                  "link_url": "https://tallerdelruta.mx/producto/kit-soporte-celular-moto-antivibracion-360",
+                  "call_to_action": { "type": "CONTACT_US", "value": { "link_title": "Escribinos" } },
+                  "page_id": "REEMPLAZAR_con_el_ID_de_la_pagina",
+                  "instagram_actor_id": "REEMPLAZAR_con_el_ID_de_la_cuenta_IG"
+                },
+                "status": "PAUSED"
+              },
+              "creative_asset": "c02-kit-antivibracion-gancho-repartidor-1080x1920.png",
+              "variante": {
+                "copy_variant": "A",
+                "angulo": "repartidor",
+                "nota": "En trafico se mide CTR y CPC, no conversiones. Sirve para quedarse con el copy de mayor CTR y llevarlo a la campana de Conversion como AD1."
+              }
+            },
+            {
+              "nombre": "TAD2 | Hero | Lluvia | C04",
+              "ad": {
+                "name": "TAD2 | Hero | Lluvia | C04",
+                "adset_id": "REEMPLAZAR_con_el_ID_del_TS1",
+                "creative": {
+                  "title": "Si llueve en tu ruta, usa el otro",
+                  "body": "Algo que conviene saber antes de que llueva: este soporte resiste el agua, pero tu teléfono va expuesto. Si tu ruta se moja, lo que necesitas es el soporte impermeable con base de espejo. Si llueve poco y tu problema es la vibración, este es el tuyo. Dinos por WhatsApp y te orientamos. 7 a 15 días hábiles.",
+                  "name": "TAD2 | Hero | Lluvia | C04",
+                  "image_url": "https://tallerdelruta.mx/creativos/c04-kit-antivibracion-gancho-lluvia-1080x1920.png",
+                  "link_url": "https://tallerdelruta.mx/producto/kit-soporte-celular-moto-antivibracion-360",
+                  "call_to_action": { "type": "CONTACT_US", "value": { "link_title": "Escribinos" } },
+                  "page_id": "REEMPLAZAR_con_el_ID_de_la_pagina",
+                  "instagram_actor_id": "REEMPLAZAR_con_el_ID_de_la_cuenta_IG"
+                },
+                "status": "PAUSED"
+              },
+              "creative_asset": "c04-kit-antivibracion-gancho-lluvia-1080x1920.png",
+              "variante": {
+                "copy_variant": "B",
+                "angulo": "lluvia",
+                "nota": "A/B de gancho contra TAD1. Es el par mas barato para aprender de la cuenta: mismo conjunto, mismo presupuesto, dos ganchos."
+              }
+            }
+          ]
+        },
+        {
+          "nombre": "TS2 | Catalogo | Coleccion tienda | Lookalike de visitantes",
+          "ad_set": {
+            "name": "TS2 | Catalogo | Coleccion tienda | Lookalike de visitantes",
+            "campaign_id": "REEMPLAZAR_con_el_ID_de_la_campana_Traffic",
+            "daily_budget": 400,
+            "budget_comment": "USD 4.00 diarios.",
+            "billing_event": "IMPRESSIONS",
+            "optimization_goal": "LANDING_PAGE_VIEWS",
+            "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+            "target_bid": null,
+            "promoted_object": {
+              "pixel_id": "REEMPLAZAR_con_el_ID_del_Pixel"
+            },
+            "attribution_spec": [
+              { "event_type": "CLICK_THROUGH", "window_days": 7 },
+              { "event_type": "VIEW_THROUGH", "window_days": 1 }
+            ],
+            "targeting": {
+              "geo_locations": { "countries": ["MX"] },
+              "age_min": 20,
+              "age_max": 50,
+              "genders": [1, 2],
+              "locales": ["es-MX"],
+              "publisher_platforms": ["facebook", "instagram"],
+              "facebook_positions": ["feed", "reels"],
+              "instagram_positions": ["feed", "reels", "stories"],
+              "device_platforms": ["mobile"],
+              "flexible_spec": [],
+              "flexible_spec_comment": "Vacio a proposito: este conjunto se segmenta por comportamiento (Lookalike de visitantes del Pixel), no por intereses. El interes se agrega solo si la audiencia de origen se queda chica.",
+              "custom_audiences": [
+                {
+                  "id": "REEMPLAZAR_ID_lookalike_1pct_visitantes_30d",
+                  "name": "Lookalike 1% Visitantes 30 dias"
+                }
+              ],
+              "custom_audiences_comment": "El Lookalike necesita minimo 100 personas de origen. Si el Pixel no tiene 100 visitantes en 30 dias, este conjunto no entrega nada y se queda vacio: en ese caso activar TS1 con mas presupuesto en lugar de este. Verificar el tamano de la audiencia en Ads Manager antes de publicar."
+            },
+            "status": "PAUSED",
+            "start_time": 1794463200,
+            "end_time": 1795068000
+          },
+          "ads": [
+            {
+              "nombre": "TAD3 | Pun | Ruta | C07",
+              "ad": {
+                "name": "TAD3 | Pun | Ruta | C07",
+                "adset_id": "REEMPLAZAR_con_el_ID_del_TS2",
+                "creative": {
+                  "title": "Goma blanda para 200 km de camino",
+                  "body": "Después de un tramo largo de carretera, la diferencia se nota en las manos. La goma blanda absorbe parte de la vibración y el patrón de canales da agarre real cuando el camino está mojado o sucio. El largo es de unos 12 cm por puno y se instalan con los punos viejos como guía. 7 a 15 días hábiles.",
+                  "name": "TAD3 | Pun | Ruta | C07",
+                  "image_url": "https://tallerdelruta.mx/creativos/c07-punos-gancho-manos-1080x1920.png",
+                  "link_url": "https://tallerdelruta.mx/producto/punos-moto-universales-22-25mm",
+                  "call_to_action": { "type": "LEARN_MORE", "value": { "link_title": "Punos universales 22 y 25 mm" } },
+                  "page_id": "REEMPLAZAR_con_el_ID_de_la_pagina",
+                  "instagram_actor_id": "REEMPLAZAR_con_el_ID_de_la_cuenta_IG"
+                },
+                "status": "PAUSED"
+              },
+              "creative_asset": "c07-punos-gancho-manos-1080x1920.png",
+              "variante": {
+                "copy_variant": "A",
+                "angulo": "ruta",
+                "nota": "Producto secundario a MXN 349, con margen bruto de 75.6%. Si este genera CPA menor a MXN 120, es mejor negocio que el hero y hay que moverle presupuesto."
+              }
+            },
+            {
+              "nombre": "TAD4 | Impermeable | Lluvia | C05",
+              "ad": {
+                "name": "TAD4 | Impermeable | Lluvia | C05",
+                "adset_id": "REEMPLAZAR_con_el_ID_del_TS2",
+                "creative": {
+                  "title": "Este sí aguanta la lluvia",
+                  "body": "Lluvia de camino y el mapa sigue igual: este soporte encierra el teléfono en una carcasa con sello y membrana, y la pantalla se sigue usando desde adentro sin sacarlo. El cierre es de liberación rápida: lo bajas en dos segundos cuando llegas. Envío a todo México, 7 a 15 días hábiles.",
+                  "name": "TAD4 | Impermeable | Lluvia | C05",
+                  "image_url": "https://tallerdelruta.mx/creativos/c05-soporte-impermeable-gancho-lluvia-1080x1920.png",
+                  "link_url": "https://tallerdelruta.mx/producto/soporte-celular-moto-impermeable-espejo",
+                  "call_to_action": { "type": "LEARN_MORE", "value": { "link_title": "Soporte impermeable con base de espejo" } },
+                  "page_id": "REEMPLAZAR_con_el_ID_de_la_pagina",
+                  "instagram_actor_id": "REEMPLAZAR_con_el_ID_de_la_cuenta_IG"
+                },
+                "status": "PAUSED"
+              },
+              "creative_asset": "c05-soporte-impermeable-gancho-lluvia-1080x1920.png",
+              "variante": {
+                "copy_variant": "B",
+                "angulo": "lluvia",
+                "nota": "Este producto tiene la honestidad de decir que se calienta. Ese tipo de copy (admitir la limitacion) suele generar mas confianza y menos comentarios negativos que prometer de mas."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "_secundarios_campana_conversion": {
+    "nota": "Cuando el hero ya tenga ventas probadas y quede presupuesto, se abren estos conjuntos. NO se abren desde el dia 1: con USD 12 diarios dividirlos en 5 conjuntos deja a cada uno con USD 2.4, que no aprende. Se priorizan en este orden: 1) Lookalike de compradores, 2) Visitantes de la ficha del hero, 3) AddToCart sin compra, 4) Interes mas cercano al que ya compro.",
+    "ad_sets_a_abrir": [
+      {
+        "nombre": "AS4 | Lookalike 1% compradores 180d",
+        "targeting": {
+          "custom_audiences": [{ "id": "REEMPLAZAR_ID_lookalike_1pct_compradores", "name": "Lookalike 1% Compradores 180 dias" }],
+          "geo_locations": { "countries": ["MX"] },
+          "age_min": 22, "age_max": 50
+        },
+        "daily_budget_usd": 3.0,
+        "cuando": "Cuando haya al menos 100 compradores o 50+ en la ventana de 180 dias."
+      },
+      {
+        "nombre": "AS5 | Visitantes ficha hero 30d",
+        "targeting": {
+          "custom_audiences": [{ "id": "REEMPLAZAR_ID_visitantes_ficha_hero_30d", "name": "Visitantes ficha hero 30 dias" }],
+          "geo_locations": { "countries": ["MX"] },
+          "age_min": 22, "age_max": 50
+        },
+        "daily_budget_usd": 2.0,
+        "cuando": "Cuando el Pixel registre al menos 500 visitantes de la ficha del hero."
+      },
+      {
+        "nombre": "AS6 | AddToCart 14d sin compra",
+        "targeting": {
+          "custom_audiences": [{ "id": "REEMPLAZAR_ID_addtocart_14d", "name": "AddToCart 14 dias" }],
+          "geo_locations": { "countries": ["MX"] },
+          "age_min": 22, "age_max": 50
+        },
+        "daily_budget_usd": 2.0,
+        "cuando": "Cuando haya al menos 50 personas en AddToCart.",
+        "nota": "Este conjunto es el mas rentable cuando existe, porque ya dijeron que lo quieren. El copy debe atacar la ultima objecion: envio, plazo y confianza."
+      }
+    ]
+  },
+
+  "_secundarios_campana_traffic": {
+    "nota": "En trafico no se compra venta, se compra informacion. Los anuncios de trafico se apagan en cuanto la campana de Conversion tenga conversiones propias; su trabajo esFinished:-traer gente y llenar el Pixel.",
+    "ad_sets_a_abrir": [
+      {
+        "nombre": "TS3 | Advantage+ con presupuesto de campana",
+        "daily_budget_usd": 4.0,
+        "cuando": "Solo si el Pixel ya tiene conversiones. Advantage+ con 1 solo conjunto y varios anuncios suele ganar al segmentado manual cuando hay datos."
+      },
+      {
+        "nombre": "TS4 | Video views 25% para retargeting",
+        "daily_budget_usd": 2.0,
+        "nota": "Audience de personas que vieron el video al 25% o mas. Se usa para Remarketing en la campana de Conversion, no para vender.",
+        "cuando": "Cuando el CPM de TS1 este por encima de MXN 95."
+      }
+    ]
+  },
+
+  "_secuencia_de_despliegue": [
+    "Dia 0: comprar el dominio .mx, apuntarlo a Vercel, setear NEXT_PUBLIC_SITE_URL, y pegar MERCADOPAGO_ACCESS_TOKEN de produccion. Hacer una compra de prueba de MXN 1 con tarjeta real.",
+    "Dia 0: instalar el Pixel de Meta con los 4 eventos (ViewContent, AddToCart, InitiateCheckout, Purchase) y verificar en Events Manager que llegan en tiempo real.",
+    "Dia 1: crear las 2 campanas en PAUSED con los IDs reales de pixel, page y los interest_id resueltos. Subir los 20 creativos de store/public/creativos/ al dominio publico y comprobar que cada URL de imagen carga.",
+    "Dia 1: activar SOLO la campana de Traffic (USD 8/dia). Medir CTR y CPC por 48 horas.",
+    "Dia 3: si CTR >= 1.5% y CPC <= MXN 6, activar la campana de Conversion (USD 12/dia). Si CTR < 1.0%, cambiar el gancho del copy, no la audiencia, y esperar 48 horas mas antes de tocar la campana de conversiones.",
+    "Dia 7: primer corte de metricas. Si no hay venta ni add to cart, el problema esta en la oferta o en la ficha de producto, no en la campana.",
+    "Dia 10: revisar si el CPA de Conversion esta <= MXN 250. Si si, activar Google Ads con USD 8. Si no, la pauta se queda en Meta y se pasa el dinero de Google a las muestras.",
+    "Dia 14: corte final contra el objetivo de 10 ventas. Decidir con los numeros del corte, no con la sensacion."
+  ],
+
+  "_checklist_previo_a_activar_ads": [
+    "El costo total puesto en cliente del hero esta confirmado por debajo de MXN 270 (VALIDACION_PROVEEDORES.md). Si no, no hay pauta.",
+    "El checkout de Mercado Pago esta probado con una compra real de MXN 1.",
+    "El Pixel de Meta dispara Purchase en /checkout/gracias y los eventos se ven en Events Manager en tiempo real.",
+    "Las 20 imagenes de store/public/creativos/ son accesibles por URL publica HTTPS. Probar cada una con curl.",
+    "Cada ficha de producto tiene fotos reales, no placeholders (store/IMAGENES.md). Si no hay fotos todavia, los anuncios pueden salir, pero el CTR va a estar por debajo del objetivo.",
+    "Los 7 dias de entrega y la nota de envio aparecen visibles en la ficha y en el anuncio.",
+    "El numero de WhatsApp en site.ts esta real. El placeholder +52 000 000 0000 no sirve para recibir pedidos.",
+    "La politica de devoluciones esta publicada y es coherente con lo que dice el copy de los anuncios."
+  ]
+}

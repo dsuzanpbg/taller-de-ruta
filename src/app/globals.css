@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #0b0c0e;
+  --color-ink-2: #101216;
+  --color-surface: #15181d;
+  --color-surface-2: #1c2027;
+  --color-line: #272c35;
+  --color-line-2: #343a45;
+  --color-accent: #ff6a00;
+  --color-accent-hover: #ff8330;
+  --color-accent-soft: #2a1a0d;
+  --color-cream: #f4f5f7;
+  --color-muted: #99a1ae;
+  --color-muted-2: #6d7480;
+  --color-success: #3ecf8e;
+
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-cream);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+@utility container-page {
+  width: 100%;
+  max-width: 80rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-page {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-page {
+    padding-inline: 2rem;
+  }
+}
+
+/* --- Prosa para guias y paginas legales --- */
+.prose-store {
+  color: var(--color-cream);
+  line-height: 1.75;
+}
+
+.prose-store h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.01em;
+}
+
+.prose-store h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-top: 1.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-store p {
+  margin-bottom: 1rem;
+  color: var(--color-muted);
+}
+
+.prose-store ul {
+  margin-bottom: 1rem;
+  padding-left: 1.25rem;
+  list-style: disc;
+  color: var(--color-muted);
+}
+
+.prose-store li {
+  margin-bottom: 0.5rem;
+}
+
+.prose-store strong {
+  color: var(--color-cream);
+  font-weight: 600;
+}
+
+.prose-store a {
+  color: var(--color-accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}

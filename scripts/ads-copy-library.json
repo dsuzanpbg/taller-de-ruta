@@ -1,0 +1,476 @@
+{
+  "_documento": {
+    "titulo": "Biblioteca de copy para anuncios - Taller de Ruta",
+    "fecha": "2026-11-09",
+    "idioma": "es-MX",
+    "moneda": "MXN",
+    "para_que_sirve": "Textos listos para publicar en Meta Ads (Facebook + Instagram). Cada bloque tiene 5 variantes, una por angulo de venta, para poder hacer A/B de copy sin escribir de mas.",
+    "reglas_de_la_casa": [
+      "El gancho va en las primeras 3 palabras del primary_text y del headline. Es lo primero que se lee en el feed.",
+      "Nunca mencionar marcas de terceros (de motores, de soportes, de cascadingos, de cascos). El producto se vende como generico o equivalente.",
+      "Nunca prometer entrega mas rapida de '7 a 15 dias habiles'. Ese es el plazo real y el unico que se puede decir.",
+      "Nunca afirmar que un producto garantiza seguridad, que impide un robo, que evita una caida o que 'protege' de forma absoluta. Se describe lo que hace, no lo que impide.",
+      "No inventar datos de competencia. Si se menciona un rango de precio de marketplace, va marcado como referencia y nunca se usa como argumento de venta.",
+      "Voz de persona real de Mexico: frases cortas, sin superlativos, sin jerga de marketing en ingles.",
+      "Los precios, el envio y las caracteristicas salen de store/src/data/products.ts y store/src/data/site.ts. No se inventan."
+    ],
+    "guia_de_longitudes": {
+      "headline": "Ideal 30 a 45 caracteres. Meta recorta cerca de 40 en mobile. Si pasa de 50, se pierde el final.",
+      "primary_text": "Las primeras 125 caracteres son los que se ven sin 'ver mas'. El gancho completo debe caber ahi.",
+      "description": "25 a 60 caracteres. Aparece abajo del link en algunos formatos.",
+      "nota_de_precios": "Los precios con 'antes' (compareAt) son los de products.ts. El envio gratis aplica desde 599 MXN de compra, segun site.ts; abajo de eso se cobran 89 MXN."
+    },
+    "_nota_de_envio_en_productos": "El campo envio_mxn refleja lo que se cobra al cliente segun src/lib/cart.ts: 0 MXN si el subtotal es 599 o mas, 89 MXN si es menor. En el copy se dice 'envio gratis' solo donde envio_mxn es 0."
+  },
+
+  "productos": {
+    "kit-soporte-celular-moto-antivibracion-360": {
+      "nombre": "Kit Soporte Celular Moto Antivibracion 360 para Repartidor",
+      "precio_mxn": 599,
+      "precio_antes_mxn": 749,
+      "envio_mxn": 0,
+      "landing_path": "/producto/kit-soporte-celular-moto-antivibracion-360",
+      "rol": "hero",
+      "angulos": ["repartidor", "ruta", "lluvia", "regalo", "precio"],
+      "headlines": [
+        { "angulo": "repartidor", "texto": "Repartidor: el mapa no se te va" },
+        { "angulo": "ruta", "texto": "200 km y el celular donde lo dejaste" },
+        { "angulo": "lluvia", "texto": "Si llueve en tu ruta, usa el otro" },
+        { "angulo": "regalo", "texto": "El regalo que el motociclista sí usa" },
+        { "angulo": "precio", "texto": "De 749 a 599, y con envío gratis" },
+        { "angulo": "instalacion", "texto": "Se instala en 5 minutos, sin taladrar" }
+      ],
+      "primary_texts": [
+        {
+          "angulo": "repartidor",
+          "texto": "El mapa se te borra porque vibra el motor, no porque tu app esté mal. Este soporte tiene amortiguación en la unión y aprieta por las cuatro esquinas, así que el teléfono deja de girarse solo. Trae el sujetador de cable para que el cargador no se suelte en cada tope. Mándanos WhatsApp con el modelo de tu moto y te decimos si le queda. Envío a todo México, 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "ruta",
+          "texto": "Doscientos kilómetros de carretera y el soporte aguanta: amortigua la vibración, gira 360° con traba para ver el mapa en vertical o acostado, y se monta en manubrio de 22 a 32 mm o en la base del espejo. Es de los que se quedan puestos, no de los que se caen a los 20 minutos. Envío a todo México, 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "lluvia",
+          "texto": "Algo que conviene saber antes de que llueva: este soporte resiste el agua, pero tu teléfono va expuesto. Si tu ruta se moja, lo que necesitas es el soporte impermeable con base de espejo. Si llueve poco y tu problema es la vibración, este es el tuyo. Dinos por WhatsApp y te orientamos. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "regalo",
+          "texto": "Si vas a regalar algo a alguien que vive sobre la moto, un soporte bonito no sirve de nada. Este trae lo que hace falta: base de manubrio, base de espejo, sujetador de cable y herramienta, todo en la caja. Se instala en diez minutos sin taladrar. Envío gratis a todo México, 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "precio",
+          "texto": "Bajamos de 749 a 599 pesos y no quitamos nada: sigue incluyendo amortiguación, rotación 360 con traba, sujeción por cuatro esquinas, base de espejo y sujetador de cable. Es el kit completo, no la mitad. Envío gratis a todo México, 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "instalacion",
+          "texto": "Aprieta la abrazadera en el manubrio, mete el brazo, ajusta el ángulo y ya. Sirve en manubrios de 22 a 32 mm o en la base del espejo, que viene incluida. Viene con herramienta, así que no necesitas comprar nada extra. ¿No sabes si le queda a tu moto? Escríbenos por WhatsApp y te mandamos la guía de medidas. Envío a todo México, 7 a 15 días hábiles."
+        }
+      ],
+      "descriptions": [
+        { "angulo": "repartidor", "texto": "Amortiguación en la unión y sujeción por 4 esquinas. $599, envío gratis." },
+        { "angulo": "ruta", "texto": "Gira 360° con traba. Manubrio 22-32 mm o base de espejo. $599." },
+        { "angulo": "lluvia", "texto": "Resistente al agua, pero el teléfono va expuesto. $599." },
+        { "angulo": "regalo", "texto": "Kit completo: base de manubrio, base de espejo y cable. $599." },
+        { "angulo": "precio", "texto": "Antes $749, ahora $599 con envío gratis a todo México." },
+        { "angulo": "instalacion", "texto": "Se instala en 10 minutos, sin taladrar. $599, envío gratis." }
+      ],
+      "ctas": [
+        { "texto": "Más información", "tipo_api": "LEARN_MORE", "nota": "Lleva a la ficha del producto." },
+        { "texto": "Comprar ahora", "tipo_api": "SHOP_NOW", "nota": "Solo si la pasarela de pago ya está activa." },
+        { "texto": "Escríbenos por WhatsApp", "tipo_api": "CONTACT_US", "nota": "Requiere Click-to-WhatsApp o enlace a wa.me en la landing." }
+      ],
+      "notas_de_uso": [
+        "No prometer que el celular no se va a mojar con este modelo: el FAQ de la ficha dice que el soporte resiste agua pero el telefono queda expuesto.",
+        "El FAQ tambien aclara que ningun soporte elimina el 100% de la vibracion. Decir 'amortigua' o 'reduce', nunca 'elimina'."
+      ]
+    },
+
+    "soporte-celular-moto-impermeable-espejo": {
+      "nombre": "Soporte Celular Moto Impermeable con Base de Espejo",
+      "precio_mxn": 469,
+      "precio_antes_mxn": 599,
+      "envio_mxn": 89,
+      "landing_path": "/producto/soporte-celular-moto-impermeable-espejo",
+      "rol": "hero",
+      "angulos": ["repartidor", "ruta", "lluvia", "regalo", "precio"],
+      "headlines": [
+        { "angulo": "repartidor", "texto": "Con lluvia no te quedas sin ruta" },
+        { "angulo": "ruta", "texto": "El mapa se ve claro bajo el agua" },
+        { "angulo": "lluvia", "texto": "Este sí aguanta la lluvia" },
+        { "angulo": "regalo", "texto": "Un regalo que aguanta el agua" },
+        { "angulo": "precio", "texto": "De 599 a 469 y con envío gratis" }
+      ],
+      "primary_texts": [
+        {
+          "angulo": "repartidor",
+          "texto": "Pantalla mojada es pantalla que no responde, y en el turno eso son pedidos perdidos. Este soporte encierra el teléfono en una carcasa con sello y membrana, y la pantalla se sigue usando desde adentro sin sacarlo. El cierre es de liberación rápida: lo bajas en dos segundos cuando llegas. Envío a todo México, 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "ruta",
+          "texto": "Va montado en la base del espejo, así que no te estorba el manubrio y queda a la altura de tu mirada. La carcasa sella el teléfono contra el agua y el polvo, y el giro es ajustable para dejarlo donde lo ves bien. Si ya traes cosas montadas en el manubrio, esta es la opción. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "lluvia",
+          "texto": "Lluvia de camino y el mapa sigue igual: este soporte encierra el teléfono en una carcasa con sello y membrana, y la pantalla se sigue usando desde adentro sin sacarlo. El cierre es de liberación rápida: lo bajas en dos segundos cuando llegas. Envío a todo México, 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "regalo",
+          "texto": "Para regalar a alguien que maneja todos los días y nunca lleva paraguas. Encaja teléfonos de 4 a 7 pulgadas, se monta en la base del espejo con su llave y trae membrana que sí deja pasar el toque. Envío a todo México, 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "precio",
+          "texto": "De 599 a 469 pesos. No es un soporte abierto con tapa: es carcasa con sello, membrana al tacto, cierre rápido y base de espejo. Además, si haces tu compra de 599 MXN o más, el envío te sale gratis. 7 a 15 días hábiles."
+        }
+      ],
+      "descriptions": [
+        { "angulo": "repartidor", "texto": "Carcasa con sello y cierre rápido. $469 + $89 de envío." },
+        { "angulo": "ruta", "texto": "Base de espejo, no estorba el manubrio. $469 + $89 de envío." },
+        { "angulo": "lluvia", "texto": "Membrana sensible al toque. $469 + $89 de envío." },
+        { "angulo": "regalo", "texto": "Para 4 a 7 pulgadas. $469 + $89 de envío." },
+        { "angulo": "precio", "texto": "Antes $599, ahora $469. Envío gratis desde $599 de compra." }
+      ],
+      "ctas": [
+        { "texto": "Más información", "tipo_api": "LEARN_MORE", "nota": "Lleva a la ficha del producto." },
+        { "texto": "Comprar ahora", "tipo_api": "SHOP_NOW", "nota": "Solo si la pasarela de pago ya está activa." },
+        { "texto": "Escríbenos por WhatsApp", "tipo_api": "CONTACT_US", "nota": "Requiere Click-to-WhatsApp o enlace a wa.me en la landing." }
+      ],
+      "notas_de_uso": [
+        "El precio de este producto es 469 MXN, debajo del umbral de envio gratis, asi que en el copy hay que decir '+ $89 de envio' en vez de 'envio gratis'.",
+        "La ficha aclara que con lluvia directa sobre la membrana el tacto pierde precision. Decir 'reduce el agua directo' o 'la pantalla se sigue usando con pantalla seca', nunca 'el telefono no se moja'.",
+        "La ficha aclara tambien que puede calentarse si se carga con la pantalla prendida. Mencionarlo como advertencia honesta, no como defecto."
+      ]
+    },
+
+    "punos-moto-universales-22-25mm": {
+      "nombre": "Punos Moto Universales 22/25 mm Antivibracion",
+      "precio_mxn": 349,
+      "precio_antes_mxn": 449,
+      "envio_mxn": 89,
+      "landing_path": "/producto/punos-moto-universales-22-25mm",
+      "rol": "hero",
+      "angulos": ["repartidor", "ruta", "lluvia", "regalo", "precio"],
+      "headlines": [
+        { "angulo": "repartidor", "texto": "Las manos dejan de doler en el turno" },
+        { "angulo": "ruta", "texto": "Goma blanda para 200 km de camino" },
+        { "angulo": "lluvia", "texto": "Agarre firme con la mano mojada" },
+        { "angulo": "regalo", "texto": "El regalo que se nota de inmediato" },
+        { "angulo": "precio", "texto": "De 449 a 349 pesos el par" }
+      ],
+      "primary_texts": [
+        {
+          "angulo": "repartidor",
+          "texto": "Los puños de fábrica se endurecen, se ponen resbalosos y a las dos horas de turno ya te están molestando. Estos son de goma blanda con patrón de canales: agarran con o sin guantes y se sienten distintos desde el primer kilometer. Vienen en 22 y 25 mm, así que seguro hay uno para tu manubrio. 7 a 15 días hábiles a todo México."
+        },
+        {
+          "angulo": "ruta",
+          "texto": "Después de un tramo largo de carretera, la diferencia se nota en las manos. La goma blanda absorbe parte de la vibración y el patrón de canales da agarre real cuando el camino está mojado o sucio. El largo es de unos 12 cm por puno y se instalan con los punos viejos como guía. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "lluvia",
+          "texto": "Con la mano mojada y con guantes, un puno de fábrica resbaloso es la peor combinación. Estos tienen canales de goma que agarran en seco y mojado, y además la vibración llega más suave a tus manos. Ojo: miden 22 mm y 25 mm, así que mide tu puno viejo antes de pedir. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "regalo",
+          "texto": "Para regalar a alguien que maneja, los punos son de las mejoras más baratas que se le pueden hacer a una moto, y de las que más se notan desde el primer ride. Vienen en 22 y 25 mm, así que seguro hay uno para tu manubrio. No necesitas comprar herramientas. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "precio",
+          "texto": "De 449 a 349 pesos te llevas el par completo, en 22 y 25 mm. Es de las compras más baratas del catálogo y de las que se notan desde el primer ride. Si haces tu compra de 599 MXN o más, el envío te sale gratis. 7 a 15 días hábiles."
+        }
+      ],
+      "descriptions": [
+        { "angulo": "repartidor", "texto": "Goma blanda con patrón antideslizante. $349 + $89 de envío." },
+        { "angulo": "ruta", "texto": "Reduce la vibración en las manos. $349 + $89 de envío." },
+        { "angulo": "lluvia", "texto": "Agarre con canal, seco o mojado. $349 + $89 de envío." },
+        { "angulo": "regalo", "texto": "Par completo en 22 y 25 mm. $349 + $89 de envío." },
+        { "angulo": "precio", "texto": "Antes $449, ahora $349 el par." }
+      ],
+      "ctas": [
+        { "texto": "Más información", "tipo_api": "LEARN_MORE", "nota": "Lleva a la ficha del producto." },
+        { "texto": "Comprar ahora", "tipo_api": "SHOP_NOW", "nota": "Solo si la pasarela de pago ya está activa." },
+        { "texto": "Escríbenos por WhatsApp", "tipo_api": "CONTACT_US", "nota": "Requiere Click-to-WhatsApp o enlace a wa.me en la landing." }
+      ],
+      "notas_de_uso": [
+        "La ficha es clara: reducen la vibracion que llega a las manos, no la vibracion del motor. Nunca decir 'elimina la vibracion'.",
+        "La medida importa. La ficha dice que lo normal es 22 mm en el clutch y 25 mm en el acelerador, pero que hay motos distintas. Usar 'mide tu puno viejo' como llamado a la accion, sin prometer que siempre alcanza.",
+        "No mencionar marcas de moto."
+      ]
+    },
+
+    "cubre-moto-impermeable-antiviento": {
+      "nombre": "Cubre Moto Impermeable con Hebilla Antiviento",
+      "precio_mxn": 599,
+      "precio_antes_mxn": 749,
+      "envio_mxn": 0,
+      "landing_path": "/producto/cubre-moto-impermeable-antiviento",
+      "rol": "hero",
+      "angulos": ["repartidor", "ruta", "lluvia", "regalo", "precio"],
+      "headlines": [
+        { "angulo": "repartidor", "texto": "Tu moto no se moja mientras comes" },
+        { "angulo": "ruta", "texto": "La moto duerme afuera, la funda aguanta" },
+        { "angulo": "lluvia", "texto": "Costuras selladas, no una lona" },
+        { "angulo": "regalo", "texto": "Para el que deja la moto en la calle" },
+        { "angulo": "precio", "texto": "De 749 a 599 con envío gratis" }
+      ],
+      "primary_texts": [
+        {
+          "angulo": "repartidor",
+          "texto": "Si tu moto se queda afuera mientras haces entregas, la lluvia y el sol la van acabando: el asiento se deteriora, los plásticos se resecan y el polvo se mete en todo. Esta funda cubre la moto completa con costuras selladas y una hebilla que pasa por debajo para que el viento no se la lleve. Envío gratis a todo México, 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "ruta",
+          "texto": "Una funda de verdad se distingue por dos cosas: las costuras selladas y que no se vuelen con el viento. Esta tiene las dos, más un forro interior suave que no raya la pintura y costuras reflectivas para que se vea de noche. Incluye bolsa para guardarla cuando no la usas. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "lluvia",
+          "texto": "Lo peor no es la lluvia: es el sol de las tres de la tarde y el polvo de la calle. Esta funda está pensada para los tres. Poliéster 210D con recubrimiento, tallas M a XXL, y una hebilla inferior que la ancla para que aguante ráfagas. Mide tu moto antes de pedir, hay tabla de medidas. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "regalo",
+          "texto": "Regalo útil para el que deja la moto afuera: esta funda con costuras selladas, forro que no raya la pintura y costuras reflectivas le va a servir todos los días, no solo en temporada de lluvia. Viene con su bolsa para guardarla. Envío gratis a todo México, 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "precio",
+          "texto": "De 749 a 599 pesos y trae lo que importa: costuras selladas, hebilla antiviento, forro suave, costuras reflectivas y bolsa de transporte. Tallas M, L, XL y XXL. Si haces tu compra de 599 MXN o más, el envío te sale gratis. 7 a 15 días hábiles."
+        }
+      ],
+      "descriptions": [
+        { "angulo": "repartidor", "texto": "Costuras selladas y hebilla antiviento. $599, envío gratis." },
+        { "angulo": "ruta", "texto": "Forro que no raya la pintura, con costuras reflectivas. $599." },
+        { "angulo": "lluvia", "texto": "Tallas M a XXL. Mide tu moto antes de pedir. $599." },
+        { "angulo": "regalo", "texto": "Incluye bolsa para guardarla. $599, envío gratis." },
+        { "angulo": "precio", "texto": "Antes $749, ahora $599 con envío gratis a todo México." }
+      ],
+      "ctas": [
+        { "texto": "Más información", "tipo_api": "LEARN_MORE", "nota": "Lleva a la ficha del producto." },
+        { "texto": "Comprar ahora", "tipo_api": "SHOP_NOW", "nota": "Solo si la pasarela de pago ya está activa." },
+        { "texto": "Escríbenos por WhatsApp", "tipo_api": "CONTACT_US", "nota": "Requiere Click-to-WhatsApp o enlace a wa.me en la landing." }
+      ],
+      "notas_de_uso": [
+        "La ficha es honesta en dos puntos: hay que esperar a que el motor y el escape enfrien antes de ponerla, y con alforjas grandes puede quedar ajustada. Conviene decir 'mide tu moto' en vez de prometer que queda justa.",
+        "No prometer que la moto queda como nueva ni que aguanta temporales extremes. 'Costuras selladas, impermeable' es lo que dice la ficha."
+      ]
+    },
+
+    "candado-disco-moto-cable-recordatorio": {
+      "nombre": "Candado de Disco Moto con Cable Recordatorio",
+      "precio_mxn": 449,
+      "precio_antes_mxn": 549,
+      "envio_mxn": 89,
+      "landing_path": "/producto/candado-disco-moto-cable-recordatorio",
+      "rol": "hero",
+      "angulos": ["repartidor", "ruta", "lluvia", "regalo", "precio"],
+      "headlines": [
+        { "angulo": "repartidor", "texto": "Se te olvidó, y el cable te avisa" },
+        { "angulo": "ruta", "texto": "Algo que se pone en segundos" },
+        { "angulo": "lluvia", "texto": "Aleación y acero, para la calle" },
+        { "angulo": "regalo", "texto": "Para el que deja la moto afuera" },
+        { "angulo": "precio", "texto": "De 549 a 449, con dos llaves" }
+      ],
+      "primary_texts": [
+        {
+          "angulo": "repartidor",
+          "texto": "La parte que la gente agradece después no es el candado: es el cable. Va del candado al manubrio, así que si intentas arrancar lo ves antes de hacerse un bola en la horquilla. Cuerpo de aleación, barril con llave y dos llaves en la caja. Envío a todo México, 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "ruta",
+          "texto": "Se pone en segundos y cabe en cualquier bolsillo. Cuerpo de aleación y acero, perno de unos 6 mm, botón de bloqueo sin llave para cerrarlo rápido entre una entrega y otra. Entra en discos con perforaciones de 6 mm o más, que es lo estándar en motos y scooters. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "lluvia",
+          "texto": "A la intemperie el material importa: aleación de zinc y acero, con barril de llave. El cable naranja es de alta visibilidad y se nota de noche. Ojo, y esto es importante: ningún candado de este rango es inviolable, lo que hace es subir el esfuerzo y quitar la oportunidad. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "regalo",
+          "texto": "Para regalar a alguien que deja la moto afuera: un candado de disco con cable recordatorio, dos llaves y bolsa para guardarlo. El cable va del candado al manubrio, así que es la parte que más se agradece el día que se te olvida. Envío a todo México, 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "precio",
+          "texto": "De 549 a 449 pesos y trae: candado de disco con aleación y acero, dos llaves, el cable recordatorio naranja y bolsa de transporte. Aparte, si haces tu compra de 599 MXN o más, el envío te sale gratis. 7 a 15 días hábiles."
+        }
+      ],
+      "descriptions": [
+        { "angulo": "repartidor", "texto": "El cable te avisa antes de arrancar. $449 + $89 de envío." },
+        { "angulo": "ruta", "texto": "Se pone en segundos, entra en discos de 6 mm. $449." },
+        { "angulo": "lluvia", "texto": "Aleación y acero, con cable naranja visible. $449 + $89." },
+        { "angulo": "regalo", "texto": "Candado, cable, dos llaves y bolsa. $449 + $89 de envío." },
+        { "angulo": "precio", "texto": "Antes $549, ahora $449 con dos llaves." }
+      ],
+      "ctas": [
+        { "texto": "Más información", "tipo_api": "LEARN_MORE", "nota": "Lleva a la ficha del producto." },
+        { "texto": "Comprar ahora", "tipo_api": "SHOP_NOW", "nota": "Solo si la pasarela de pago ya está activa." },
+        { "texto": "Escríbenos por WhatsApp", "tipo_api": "CONTACT_US", "nota": "Requiere Click-to-WhatsApp o enlace a wa.me en la landing." }
+      ],
+      "notas_de_uso": [
+        "REGLA DURA: nunca decir que 'evita el robo', 'protege tu moto' o 'garantiza seguridad'. La ficha dice textual que desconfie de quien afirme eso. Hablar de subir el esfuerzo y quitar la oportunidad.",
+        "El FAQ de la ficha es honesto con que arrancar con fuerza puede danar el disco o la horquilla. Se puede mencionar como advertencia de uso del cable, no como defecto.",
+        "No usar palabras como 'antirrobo', 'seguridad total' o 'a prueba de robos'."
+      ]
+    },
+
+    "bolsa-pierna-impermeable-motociclista": {
+      "nombre": "Bolsa de Pierna Impermeable para Motociclista",
+      "precio_mxn": 399,
+      "precio_antes_mxn": 499,
+      "envio_mxn": 89,
+      "landing_path": "/producto/bolsa-pierna-impermeable-motociclista",
+      "rol": "upsell",
+      "angulos": ["repartidor", "ruta", "lluvia", "regalo", "precio"],
+      "headlines": [
+        { "angulo": "repartidor", "texto": "La cartera va contigo, no en la moto" },
+        { "angulo": "ruta", "texto": "Ajustada al muslo, no se mueve" },
+        { "angulo": "lluvia", "texto": "Documentos secos bajo el agua" },
+        { "angulo": "regalo", "texto": "El regalo útil que no se pierde" },
+        { "angulo": "precio", "texto": "De 499 a 399 pesos" }
+      ],
+      "primary_texts": [
+        {
+          "angulo": "repartidor",
+          "texto": "La bolsa de siempre acaba en la charola de la moto y con el primer charco se moja la cartera. Esta se ajusta al muslo con correas regulables, tiene compartimentos separados para documentos y teléfono, y cuando te bajas te la llevas contigo. No es lo más bonito, es lo que sí se usa. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "ruta",
+          "texto": "Se queda fija en el trayecto si la ajustas antes de arrancar, y al bajarte te la llevas sin dejar nada en la moto. Mide unos 22 x 15 x 8 cm, así que cabe lo que llevas encima y nada más. Con correas regulables universales y material impermeable. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "lluvia",
+          "texto": "Cierre impermeable y compartimentos separados: los documentos no se maltratan con la cartera. El teléfono va en su propio compartimento y entra hasta 6.7 pulgadas. Un detalle honesto: no es transpirable, porque es impermeable, y en clima muy caluroso se siente el contacto. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "regalo",
+          "texto": "Para regalar a alguien que siempre deja la mochila en la moto: una bolsa que va al muslo, con compartimento aparte para documentos y para el teléfono, y con reflejantes para que te vean de noche. Se convierte en bolsa de mano cuando te bajas. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "precio",
+          "texto": "De 499 a 399 pesos. Correa al muslo regulable, cierre impermeable, tres compartimentos, material reforzado y reflejantes. Y si haces tu compra de 599 MXN o más, el envío te sale gratis. 7 a 15 días hábiles."
+        }
+      ],
+      "descriptions": [
+        { "angulo": "repartidor", "texto": "Se ajusta al muslo y te la llevas al bajarte. $399 + $89." },
+        { "angulo": "ruta", "texto": "22 x 15 x 8 cm, con correas regulables. $399 + $89." },
+        { "angulo": "lluvia", "texto": "Compartimentos separados para documentos. $399 + $89." },
+        { "angulo": "regalo", "texto": "Con reflejantes para verse de noche. $399 + $89 de envío." },
+        { "angulo": "precio", "texto": "Antes $499, ahora $399." }
+      ],
+      "ctas": [
+        { "texto": "Más información", "tipo_api": "LEARN_MORE", "nota": "Lleva a la ficha del producto." },
+        { "texto": "Comprar ahora", "tipo_api": "SHOP_NOW", "nota": "Solo si la pasarela de pago ya está activa." },
+        { "texto": "Escríbenos por WhatsApp", "tipo_api": "CONTACT_US", "nota": "Requiere Click-to-WhatsApp o enlace a wa.me en la landing." }
+      ],
+      "notas_de_uso": [
+        "Usar en el copy el angulo de compartimentos y documents: es lo que distingue esta bolsa de una bolsa de tela cualquiera.",
+        "La ficha es honesta con que no es transpirable. Mencionarlo como algo a considerar en clima caluroso, no como defecto oculto."
+      ]
+    },
+
+    "red-elastica-porta-carga-moto": {
+      "nombre": "Red Elastica Porta Carga para Moto",
+      "precio_mxn": 199,
+      "precio_antes_mxn": 249,
+      "envio_mxn": 89,
+      "landing_path": "/producto/red-elastica-porta-carga-moto",
+      "rol": "upsell",
+      "angulos": ["repartidor", "ruta", "lluvia", "regalo", "precio"],
+      "headlines": [
+        { "angulo": "repartidor", "texto": "El casco ya no ocupa la mano" },
+        { "angulo": "ruta", "texto": "El casco se queda con la moto" },
+        { "angulo": "lluvia", "texto": "Seis ganchos para lo que sea" },
+        { "angulo": "regalo", "texto": "El regalo de 199 que siempre sirve" },
+        { "angulo": "precio", "texto": "De 249 a 199 pesos" }
+      ],
+      "primary_texts": [
+        {
+          "angulo": "repartidor",
+          "texto": "El casco en la mano es un casco que no llevas bien puesto. Esta red lo fija a la parrilla o al asiento con seis ganchos de metal recubierto, que no rayan la pintura, y el elástico mantiene la tensión sin aflojarse. Se enrolla y se guarda en cualquier hueco. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "ruta",
+          "texto": "Sirve para el casco, para la mochila, para la bolsa del día o para la compra que hiciste de camino. Estirada mide unos 40 x 40 cm y los ganchos son de metal recubierto para no marcar nada. Es de los accesorios más baratos del catálogo y de los que más se usan. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "lluvia",
+          "texto": "Con lluvia, dejar el casco suelto en el asiento es pedir que se moje. Esta red lo amarra a la moto para que aguante el agua y el viento, sin rayar la pintura ni los plásticos. Seis ganchos, elástico de alta tensión y se enrolla para guardar. 7 a 15 días hábiles a todo México."
+        },
+        {
+          "angulo": "regalo",
+          "texto": "Para regalar a alguien que maneja: una red de carga con seis ganchos. Se la va a llevar puesta más de lo que te imaginas, porque resuelve el casco, la mochila y la bolsa en un solo accesorio. No necesita instalación ni herramientas. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "precio",
+          "texto": "De 249 a 199 pesos. Es el accesorio más barato que tenemos y resuelve el problema más común: dónde dejar el casco y la mochila cuando no los llevas encima. Seis ganchos, elástico de alta tensión, se enrolla para guardar. 7 a 15 días hábiles."
+        }
+      ],
+      "descriptions": [
+        { "angulo": "repartidor", "texto": "6 ganchos que no rayan la pintura. $199 + $89 de envío." },
+        { "angulo": "ruta", "texto": "40 x 40 cm estirada, para casco o mochila. $199 + $89." },
+        { "angulo": "lluvia", "texto": "Elástico de alta tensión, no se afloja. $199 + $89." },
+        { "angulo": "regalo", "texto": "El accesorio más barato y más útil. $199 + $89 de envío." },
+        { "angulo": "precio", "texto": "Antes $249, ahora $199." }
+      ],
+      "ctas": [
+        { "texto": "Más información", "tipo_api": "LEARN_MORE", "nota": "Lleva a la ficha del producto." },
+        { "texto": "Comprar ahora", "tipo_api": "SHOP_NOW", "nota": "Solo si la pasarela de pago ya está activa." },
+        { "texto": "Escríbenos por WhatsApp", "tipo_api": "CONTACT_US", "nota": "Requiere Click-to-WhatsApp o enlace a wa.me en la landing." }
+      ],
+      "notas_de_uso": [
+        "Es el producto ideal para.push de AOV: 'suma esto a tu pedido' en lugar de venderlo como producto principal.",
+        "La ficha dice que los ganchos son de metal recubierto para no rayar. Decir 'no rayan la pintura' es lo que dice la ficha y se puede sostener."
+      ]
+    },
+
+    "stickers-reflectivos-moto-casco": {
+      "nombre": "Stickers Reflectivos para Moto y Casco",
+      "precio_mxn": 149,
+      "precio_antes_mxn": 189,
+      "envio_mxn": 89,
+      "landing_path": "/producto/stickers-reflectivos-moto-casco",
+      "rol": "upsell",
+      "angulos": ["repartidor", "ruta", "lluvia", "regalo", "precio"],
+      "headlines": [
+        { "angulo": "repartidor", "texto": "Que te vean de noche, sin decir nada" },
+        { "angulo": "ruta", "texto": "De noche, los reflectivos se notan" },
+        { "angulo": "lluvia", "texto": "Se ven con la luz de los headlights" },
+        { "angulo": "regalo", "texto": "El regalo que se nota de noche" },
+        { "angulo": "precio", "texto": "De 189 a 149 pesos" }
+      ],
+      "primary_texts": [
+        {
+          "angulo": "repartidor",
+          "texto": "De noche, en un cruce, lo que te salva es que te vean. Estos stickers reflectivos rebotan la luz de los headlights y se vuelven visibles justo cuando más se te necesita ver. Son el accesorio más barato del catálogo y el que más se nota en la calle. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "ruta",
+          "texto": "En carretera de noche, el reflejo importa. Los pegas en el casco, en la mochila o en los costados de la moto y devuelven la luz en lugar de absorberla. Es de los primeros reflejantes que notas en ti mismo la primera noche. 7 a 15 días hábiles a todo México."
+        },
+        {
+          "angulo": "lluvia",
+          "texto": "Con la moto mojada y de noche, los reflectivos se notan todavía más porque el agua los hace brillar. Pégalos en el casco, en la mochila o en los paneles. Vienen en piezas adhesivas reflectivas, fáciles de poner y de quitar. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "regalo",
+          "texto": "Un regalo de 149 pesos que se nota desde lejos. Reflectivos para casco, mochila o moto, que rebotan la luz y hacen que te vean de noche. Es el tipo de cosa que la persona agradece la primera vez que vuelve manejando de noche. 7 a 15 días hábiles."
+        },
+        {
+          "angulo": "precio",
+          "texto": "De 189 a 149 pesos. Por menos de lo que cuesta un café y un casquillo, te ven de noche. Y si haces tu compra de 599 MXN o más, el envío te sale gratis. 7 a 15 días hábiles."
+        }
+      ],
+      "descriptions": [
+        { "angulo": "repartidor", "texto": "Rebotan la luz de los headlights. $149 + $89 de envío." },
+        { "angulo": "ruta", "texto": "Para casco, mochila o moto. $149 + $89 de envío." },
+        { "angulo": "lluvia", "texto": "Pegan fácil y no queda rastro. $149 + $89 de envío." },
+        { "angulo": "regalo", "texto": "El regalo de 149 que se ve de noche. $149 + $89." },
+        { "angulo": "precio", "texto": "Antes $189, ahora $149." }
+      ],
+      "ctas": [
+        { "texto": "Más información", "tipo_api": "LEARN_MORE", "nota": "Lleva a la ficha del producto." },
+        { "texto": "Comprar ahora", "tipo_api": "SHOP_NOW", "nota": "Solo si la pasarela de pago ya está activa." },
+        { "texto": "Escríbenos por WhatsApp", "tipo_api": "CONTACT_US", "nota": "Requiere Click-to-WhatsApp o enlace a wa.me en la landing." }
+      ],
+      "notas_de_uso": [
+        "No afirmar que 'garantiza que te vean' ni que 'evita accidentes'. La ficha no lo dice. Hablar de que rebotan la luz y se vuelven visibles con los headlights.",
+        "Nunca incluir logos ni escudos de marcas en el copy o en las imagenes. Solo formas y texto neutros."
+      ]
+    }
+  }
+}
